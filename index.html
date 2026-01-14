@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>THE IRON TRIBE • Confident in Christ</title>
+  <meta name="description" content="A Bible Journey Game on Self-Confidence by THE IRON TRIBE (Ages 12–25)." />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121b2f;
+      --muted:#9fb0d0;
+      --text:#eef3ff;
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --bad:#fb7185;
+      --line: rgba(255,255,255,.08);
+      --shadow: 0 12px 40px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(167,139,250,.18), transparent 60%),
+        radial-gradient(1000px 600px at 90% 20%, rgba(125,211,252,.16), transparent 60%),
+        linear-gradient(180deg, #071024, var(--bg));
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit}
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 16px 36px;
+    }
+    header{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 16px;
+    }
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .badge{
+      width:44px;height:44px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(125,211,252,.22), rgba(167,139,250,.22));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      display:grid;place-items:center;
+      font-weight:800;
+      letter-spacing:.5px;
+    }
+    h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.6px;
+      text-transform: uppercase;
+      color: rgba(238,243,255,.92);
+    }
+    .sub{
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+    .topActions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    button{
+      cursor:pointer;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.25);
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    button:hover{ background: rgba(255,255,255,.09); border-color: rgba(125,211,252,.35); }
+    button:active{ transform: translateY(1px); }
+    button.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.20), rgba(167,139,250,.18));
+      border-color: rgba(125,211,252,.25);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: rgba(18,27,47,.82);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHead{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .cardHead h2{
+      margin:0;
+      font-size: 14px;
+      letter-spacing:.4px;
+      color: rgba(238,243,255,.92);
+      text-transform: uppercase;
+    }
+    .pill{
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Journey */
+    .journey{
+      padding: 14px;
+    }
+    .path{
+      display:grid;
+      gap: 10px;
+    }
+    .step{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background: rgba(255,255,255,.03);
+    }
+    .step .num{
+      width:34px;height:34px;border-radius:12px;
+      display:grid;place-items:center;
+      font-weight:800;
+      background: rgba(125,211,252,.12);
+      border: 1px solid rgba(125,211,252,.18);
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+    .step.locked{ opacity:.55; }
+    .step.done{
+      border-color: rgba(52,211,153,.25);
+      background: rgba(52,211,153,.06);
+    }
+    .step.current{
+      border-color: rgba(125,211,252,.35);
+      background: rgba(125,211,252,.06);
+    }
+    .step h3{
+      margin:0;
+      font-size: 14px;
+      letter-spacing:.2px;
+    }
+    .step p{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .stepActions{
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    /* Quiz */
+    .quiz{
+      padding: 14px;
+    }
+    .qTitle{
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .qMeta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .choices{
+      display:grid;
+      gap:10px;
+      margin: 10px 0 12px;
+    }
+    .choice{
+      text-align:left;
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      font-weight: 650;
+      line-height: 1.25;
+    }
+    .choice small{
+      display:block;
+      font-weight: 550;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .choice.correct{
+      border-color: rgba(52,211,153,.35);
+      background: rgba(52,211,153,.10);
+    }
+    .choice.wrong{
+      border-color: rgba(251,113,133,.35);
+      background: rgba(251,113,133,.08);
+    }
+
+    .feedback{
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      margin-top: 6px;
+      color: rgba(238,243,255,.92);
+      display:none;
+    }
+    .feedback.show{ display:block; }
+    .feedback .tag{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .feedback .tag.good{ border-color: rgba(52,211,153,.35); color: rgba(52,211,153,.95); }
+    .feedback .tag.bad{ border-color: rgba(251,113,133,.35); color: rgba(251,113,133,.95); }
+    .verse{
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: rgba(238,243,255,.92);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* Sidebar */
+    .side{
+      padding: 14px;
+    }
+    .statRow{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin: 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .big{
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing:.4px;
+      color: rgba(238,243,255,.96);
+    }
+    .hint{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      border-top: 1px dashed var(--line);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+    .footerNote{
+      margin-top: 14px;
+      font-size: 12px;
+      color: rgba(159,176,208,.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="badge">IT</div>
+        <div>
+          <h1>THE IRON TRIBE • Confident in Christ</h1>
+          <p class="sub">An online Bible journey game on self-confidence (Ages 12–25). Your confidence is forged in Christ.</p>
+        </div>
+      </div>
+      <div class="topActions">
+        <button class="primary" id="shareBtn">Share</button>
+        <button id="restartBtn">Restart</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: Journey -->
+      <section class="card" aria-label="Journey">
+        <div class="cardHead">
+          <h2>Journey Path</h2>
+          <span class="pill" id="progressPill">Step 1 of 6</span>
+        </div>
+        <div class="journey">
+          <div class="path" id="path"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Quiz -->
+      <section class="card" aria-label="Quiz">
+        <div class="cardHead">
+          <h2>Question</h2>
+          <span class="pill" id="scorePill">Score: 0/6</span>
+        </div>
+        <div class="quiz">
+          <h3 class="qTitle" id="qTitle">Loading…</h3>
+          <div class="qMeta" id="qMeta"></div>
+          <div class="choices" id="choices"></div>
+
+          <div class="feedback" id="feedback">
+            <span class="tag" id="fbTag">Feedback</span>
+            <div id="fbText"></div>
+            <div class="verse" id="fbVerse"></div>
+            <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+              <button class="primary" id="nextBtn">Next Step</button>
+              <button id="reviewBtn">Review This Step</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Sidebar / Info -->
+      <section class="card" style="grid-column:1/-1;" aria-label="Stats">
+        <div class="cardHead">
+          <h2>Iron Tribe Dashboard</h2>
+          <span class="pill" id="statusPill">In progress</span>
+        </div>
+        <div class="side">
+          <div class="statRow">
+            <div>
+              <div class="big" id="bigScore">0</div>
+              <div>Correct answers</div>
+            </div>
+            <div>
+              <div class="big" id="bigStep">1</div>
+              <div>Current step</div>
+            </div>
+            <div>
+              <div class="big" id="bigStreak">0</div>
+              <div>Streak</div>
+            </div>
+          </div>
+
+          <div class="hint">
+            <b>How to use (online-only):</b><br/>
+            • Post the link in your WhatsApp group / Instagram bio.<br/>
+            • Members play on their phones and take a screenshot of their final screen if you want proof.<br/>
+            • Encourage them to share the final verse with one friend.
+          </div>
+
+          <div class="footerNote">
+            📖 Theme verse: “As iron sharpens iron, so one person sharpens another.” — Proverbs 27:17
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  // -----------------------------
+  // Data: 6-step journey (12–25)
+  // -----------------------------
+  const STEPS = [
+    {
+      id: 1,
+      title: "Identity in Christ",
+      subtitle: "You are God’s creation — valuable and purposeful.",
+      question: "According to Psalm 139:14, how does God see you?",
+      choices: [
+        { text: "Weak", note: "Confidence is not from labels." },
+        { text: "Forgotten", note: "God sees you and knows you." },
+        { text: "Fearfully and wonderfully made", note: "This is your God-given identity." , correct: true},
+        { text: "Not important", note: "You matter deeply to God." }
+      ],
+      correctFeedback: "Yes! Your confidence begins with your identity: you are created with purpose and worth.",
+      wrongFeedback: "Not quite — your confidence starts with God’s truth about you, not feelings or labels.",
+      verse: "“I praise you because I am fearfully and wonderfully made…” — Psalm 139:14"
+    },
+    {
+      id: 2,
+      title: "Chosen by God",
+      subtitle: "God calls ordinary people to do extraordinary things.",
+      question: "Who felt unqualified but was chosen by God to lead Israel? (Judges 6)",
+      choices: [
+        { text: "Moses" },
+        { text: "Gideon", correct: true },
+        { text: "Samson" },
+        { text: "Saul" }
+      ],
+      correctFeedback: "Correct. Gideon felt small — but God called him a mighty warrior. God’s calling builds confidence.",
+      wrongFeedback: "Try again. The right answer shows that God can use you even when you feel unqualified.",
+      verse: "“The Lord is with you, mighty warrior.” — Judges 6:12"
+    },
+    {
+      id: 3,
+      title: "Overcoming Fear",
+      subtitle: "Fear doesn’t define you — God’s Spirit does.",
+      question: "Which verse teaches that God gives us power, love, and self-control?",
+      choices: [
+        { text: "Psalm 23" },
+        { text: "Matthew 5" },
+        { text: "2 Timothy 1:7", correct: true },
+        { text: "Romans 8" }
+      ],
+      correctFeedback: "Yes. Confidence grows when you remember what God has given you: power, love, and self-control.",
+      wrongFeedback: "Not this one. Your confidence grows when you replace fear with God’s truth.",
+      verse: "“For God has not given us a spirit of fear, but of power and of love and of self-control.” — 2 Timothy 1:7"
+    },
+    {
+      id: 4,
+      title: "Strength from God",
+      subtitle: "God fights your battles when you trust Him.",
+      question: "Why was David confident when facing Goliath?",
+      choices: [
+        { text: "He trusted his skills" },
+        { text: "He trusted God’s power", correct: true },
+        { text: "He had armor" },
+        { text: "He had experience" }
+      ],
+      correctFeedback: "Correct. David’s confidence wasn’t pride — it was faith in the living God.",
+      wrongFeedback: "Not quite. David’s confidence came from trusting God, not his own strength.",
+      verse: "“You come against me with sword and spear… but I come against you in the name of the Lord Almighty.” — 1 Samuel 17:45"
+    },
+    {
+      id: 5,
+      title: "Power in Weakness",
+      subtitle: "God’s grace shines brightest when you feel weak.",
+      question: "What did God say to Paul about weakness? (2 Corinthians 12:9)",
+      choices: [
+        { text: "Avoid it" },
+        { text: "Hide it" },
+        { text: "My grace is sufficient for you", correct: true },
+        { text: "It disqualifies you" }
+      ],
+      correctFeedback: "Yes. Weakness doesn’t cancel you — it creates space for God’s power.",
+      wrongFeedback: "Not that one. God doesn’t reject you for weakness — He strengthens you through it.",
+      verse: "“My grace is sufficient for you, for my power is made perfect in weakness.” — 2 Corinthians 12:9"
+    },
+    {
+      id: 6,
+      title: "Walking Boldly",
+      subtitle: "Confidence is living with Christ’s strength every day.",
+      question: "Which verse best represents biblical confidence?",
+      choices: [
+        { text: "Believe in yourself" },
+        { text: "Trust your abilities" },
+        { text: "I can do all things through Christ who strengthens me", correct: true },
+        { text: "Never fail" }
+      ],
+      correctFeedback: "You got it! Biblical confidence = Christ-centered strength, not self-centered pride.",
+      wrongFeedback: "Almost. Biblical confidence comes from Christ, not from perfection or self-reliance.",
+      verse: "“I can do all things through Christ who strengthens me.” — Philippians 4:13"
+    }
+  ];
+
+  // -----------------------------
+  // State (saved in localStorage)
+  // -----------------------------
+  const STORAGE_KEY = "irontribe_confident_game_v1";
+  const defaultState = { stepIndex: 0, score: 0, answered: {}, streak: 0, finished: false };
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return structuredClone(defaultState);
+      const parsed = JSON.parse(raw);
+      return { ...structuredClone(defaultState), ...parsed };
+    }catch{
+      return structuredClone(defaultState);
+    }
+  }
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  let state = loadState();
+
+  // -----------------------------
+  // Elements
+  // -----------------------------
+  const pathEl = document.getElementById("path");
+  const progressPill = document.getElementById("progressPill");
+  const scorePill = document.getElementById("scorePill");
+  const statusPill = document.getElementById("statusPill");
+  const qTitle = document.getElementById("qTitle");
+  const qMeta = document.getElementById("qMeta");
+  const choicesEl = document.getElementById("choices");
+  const feedbackEl = document.getElementById("feedback");
+  const fbTag = document.getElementById("fbTag");
+  const fbText = document.getElementById("fbText");
+  const fbVerse = document.getElementById("fbVerse");
+  const nextBtn = document.getElementById("nextBtn");
+  const reviewBtn = document.getElementById("reviewBtn");
+  const restartBtn = document.getElementById("restartBtn");
+  const shareBtn = document.getElementById("shareBtn");
+
+  const bigScore = document.getElementById("bigScore");
+  const bigStep = document.getElementById("bigStep");
+  const bigStreak = document.getElementById("bigStreak");
+
+  // -----------------------------
+  // Rendering
+  // -----------------------------
+  function renderPath(){
+    pathEl.innerHTML = "";
+    STEPS.forEach((s, idx) => {
+      const isDone = !!state.answered[s.id]?.correct;
+      const isCurrent = idx === state.stepIndex && !state.finished;
+      const isLocked = idx > state.stepIndex && !state.finished;
+
+      const row = document.createElement("div");
+      row.className = "step" + (isDone ? " done" : "") + (isCurrent ? " current" : "") + (isLocked ? " locked" : "");
+
+      const num = document.createElement("div");
+      num.className = "num";
+      num.textContent = s.id;
+
+      const info = document.createElement("div");
+      const h = document.createElement("h3");
+      h.textContent = s.title;
+      const p = document.createElement("p");
+      p.textContent = s.subtitle;
+
+      info.appendChild(h);
+      info.appendChild(p);
+
+      const actions = document.createElement("div");
+      actions.className = "stepActions";
+
+      const btn = document.createElement("button");
+      btn.textContent = isDone ? "Review" : (isLocked ? "Locked" : "Play");
+      btn.disabled = isLocked;
+      btn.className = isLocked ? "" : "primary";
+      btn.addEventListener("click", () => {
+        state.stepIndex = idx;
+        state.finished = false;
+        saveState();
+        renderAll();
+      });
+
+      actions.appendChild(btn);
+      row.appendChild(num);
+      row.appendChild(info);
+      row.appendChild(actions);
+
+      pathEl.appendChild(row);
+    });
+  }
+
+  function renderQuiz(){
+    const current = STEPS[state.stepIndex];
+    const answered = state.answered[current.id];
+
+    progressPill.textContent = state.finished ? "Completed" : `Step ${current.id} of ${STEPS.length}`;
+    scorePill.textContent = `Score: ${state.score}/${STEPS.length}`;
+
+    bigScore.textContent = state.score;
+    bigStep.textContent = state.finished ? STEPS.length : (state.stepIndex + 1);
+    bigStreak.textContent = state.streak;
+
+    statusPill.textContent = state.finished ? "Finished • Share it!" : "In progress";
+
+    qTitle.textContent = current.question;
+    qMeta.innerHTML = "";
+    const metaBits = [
+      `Step: ${current.id} • ${current.title}`,
+      "Goal: Confidence in Christ (not pride)"
+    ];
+    metaBits.forEach(t=>{
+      const span = document.createElement("span");
+      span.className = "pill";
+      span.textContent = t;
+      qMeta.appendChild(span);
+    });
+
+    choicesEl.innerHTML = "";
+    feedbackEl.classList.remove("show");
+
+    current.choices.forEach((c, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.innerHTML = `${String.fromCharCode(65 + idx)}. ${c.text}` + (c.note ? `<small>${c.note}</small>` : "");
+
+      // If already answered, show results and disable
+      if(answered){
+        btn.disabled = true;
+        if(c.correct) btn.classList.add("correct");
+        if(answered.selectedIndex === idx && !answered.correct) btn.classList.add("wrong");
+      } else {
+        btn.addEventListener("click", () => handleAnswer(idx));
+      }
+
+      choicesEl.appendChild(btn);
+    });
+
+    // If answered already, show feedback
+    if(answered){
+      showFeedback(answered.correct, current);
+    }
+  }
+
+  function showFeedback(isCorrect, step){
+    feedbackEl.classList.add("show");
+    fbTag.textContent = isCorrect ? "Correct" : "Try again";
+    fbTag.className = "tag " + (isCorrect ? "good" : "bad");
+    fbText.textContent = isCorrect ? step.correctFeedback : step.wrongFeedback;
+    fbVerse.textContent = step.verse;
+
+    nextBtn.style.display = isCorrect ? "inline-block" : "none";
+    reviewBtn.textContent = isCorrect ? "Review This Step" : "Try Again";
+  }
+
+  function renderAll(){
+    renderPath();
+    renderQuiz();
+  }
+
+  // -----------------------------
+  // Game logic
+  // -----------------------------
+  function handleAnswer(choiceIndex){
+    const step = STEPS[state.stepIndex];
+    const correctIndex = step.choices.findIndex(c => c.correct);
+    const isCorrect = choiceIndex === correctIndex;
+
+    // Record answer
+    state.answered[step.id] = { selectedIndex: choiceIndex, correct: isCorrect };
+
+    if(isCorrect){
+      state.score = Math.min(STEPS.length, state.score + 1);
+      state.streak += 1;
+    } else {
+      state.streak = 0;
+    }
+
+    saveState();
+    renderAll();
+  }
+
+  nextBtn.addEventListener("click", () => {
+    // Advance only if current step correct
+    const step = STEPS[state.stepIndex];
+    const answered = state.answered[step.id];
+    if(!answered?.correct) return;
+
+    if(state.stepIndex < STEPS.length - 1){
+      state.stepIndex += 1;
+      saveState();
+      renderAll();
+    } else {
+      // Finish
+      state.finished = true;
+      saveState();
+      showFinalScreen();
+      renderAll();
+    }
+  });
+
+  reviewBtn.addEventListener("click", () => {
+    const step = STEPS[state.stepIndex];
+    const answered = state.answered[step.id];
+
+    if(answered?.correct){
+      // Just keep on same step; allow reviewing
+      feedbackEl.scrollIntoView({behavior:"smooth", block:"start"});
+      return;
+    }
+    // Try again: clear answer for this step
+    delete state.answered[step.id];
+    saveState();
+    renderAll();
+  });
+
+  restartBtn.addEventListener("click", () => {
+    state = structuredClone(defaultState);
+    saveState();
+    renderAll();
+  });
+
+  async function share(){
+    const text = `THE IRON TRIBE • Confident in Christ — Online Bible Journey Game (Ages 12–25)\n\nPlay here: ${location.href}`;
+    try{
+      if(navigator.share){
+        await navigator.share({ title: "THE IRON TRIBE • Confident in Christ", text, url: location.href });
+      } else {
+        await navigator.clipboard.writeText(text);
+        alert("Share text copied to clipboard ✅");
+      }
+    }catch{
+      // fallback
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Share text copied to clipboard ✅");
+      }catch{
+        alert("Could not auto-share. Copy the link from the address bar.");
+      }
+    }
+  }
+  shareBtn.addEventListener("click", share);
+
+  function showFinalScreen(){
+    // Replace quiz area with final message (still keeps path)
+    qTitle.textContent = "🎉 Congratulations, Iron Tribe!";
+    qMeta.innerHTML = "";
+    const s1 = document.createElement("span");
+    s1.className = "pill";
+    s1.textContent = `Final Score: ${state.score}/${STEPS.length}`;
+    const s2 = document.createElement("span");
+    s2.className = "pill";
+    s2.textContent = "Share this with a friend";
+    qMeta.appendChild(s1);
+    qMeta.appendChild(s2);
+
+    choicesEl.innerHTML = `
+      <div class="verse">
+        🛡️ <b>YOU ARE CONFIDENT IN CHRIST</b><br/><br/>
+        “The Lord is my light and my salvation—whom shall I fear?” — <b>Psalm 27:1</b><br/><br/>
+        Reflection: Where do I need God’s strength this week?
+      </div>
+    `;
+
+    feedbackEl.classList.add("show");
+    fbTag.textContent = "Finished";
+    fbTag.className = "tag good";
+    fbText.textContent = "You’ve completed the journey. Your confidence is forged in Christ — keep walking boldly.";
+    fbVerse.textContent = "“As iron sharpens iron, so one person sharpens another.” — Proverbs 27:17";
+
+    nextBtn.style.display = "none";
+    reviewBtn.textContent = "Play Again";
+    reviewBtn.onclick = () => {
+      state = structuredClone(defaultState);
+      saveState();
+      reviewBtn.onclick = null;
+      renderAll();
+    };
+  }
+
+  // If already finished, show final
+  function boot(){
+    renderAll();
+    if(state.finished){
+      showFinalScreen();
+    }
+  }
+  boot();
+</script>
+</body>
+</html>
